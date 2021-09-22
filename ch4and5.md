@@ -1,6 +1,53 @@
 # Chapter 4 and 5 Discussion
 
+## Recap from Last Time
 
+### Ch 2
+- We talked about the contents of the `.git` directory
+- `.git/objects` forms git's database
+- Talked about tools to view contents of commits `cat-file`. Also using inflate,
+  hexdump to see how trees and blobs are stored on disk
+- Storing blobs and trees in a compressed format, along with object IDs
+- Commits point to trees and trees point to blobs
+- Commits are stored as a series of headers followed by a message.
+- Commits refer to a tree that represents state of files at that point in
+  time
+- Use SHA-1 hash function to get the object ID
+
+### Ch 3
+- initialized repo: made `.git` and `.git/objects` and `.git/refs`
+- author started introducing abstractions
+- started storing blobs and trees into the database
+- called out the need for atomicity
+- using `Array.pack` to compress
+
+In essence, last time we talked about what things are and started storing
+them, but didn't have any way of connecting these objects through time.
+_______________
+
+# Discussion Questions
+
+1. How are commits linked? Why is this better/more performant? (Why not sort
+   by timestamps?)
+2. In distributed systems, we often need to think about race conditions. How
+   does Git handle the potential for multiple processes to write to the same
+   HEAD file?
+3. Compare/contrast: what happens when a file is changed in a commit? what
+   happens when a file is unchanged in a commit? (w/r/t git database and
+   trees)
+   stored and referenced?)
+4. What's cool about Merkle trees?
+5. Why must git's tree objects have their entries be sorted?
+6. What do you think about the author's approach?
+7. What do you think about the structure of our code so far? What would you
+   change if anything?
+8. Any stories to share about git snafus or race condition conundrums?
+
+Notes to self
+- kind of interesting author is alluding to linked list traversal without
+  calling it out
+- moderately annoying we update the code in a paint by numbers way but not
+  all the steps are written down (always gotta update the requires)
 
 # Chapter 4 Making history
 Need for storing relationships between commits in order to see a history.
@@ -88,6 +135,12 @@ Subdirectories are listed using an Object ID that refers to another tree.
 
 Merkle tree: method of storing a tree of information where each tree is
 labeled with the hash of its children.
+
+|  But remember that every object in the database has an ID that’s the SHA-1
+hash of its contents, and the contents of a tree is just a list of the
+hashes and names of its entries. This means that if we see two tree entries
+with the same ID, we know their contents are exactly the same, and we can
+skip over them entirely.
 
 ## 5.2.2 Building a Merkle tree
 
