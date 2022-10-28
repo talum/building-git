@@ -61,4 +61,6 @@
 - might re-add content you intended to delete due to merge
 - better to revert 
 
+Delayed: I finally get why refspecs are useful. For instance, can use a namespace to only fetch those branches I care about.
+
 ## Questions ??? 
